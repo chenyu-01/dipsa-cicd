@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run build
+      - name: Scan the branch
         run: |
-          # Build steps go here!
-          echo "Building branch ${{ github.ref }}..."
+          trivy fs -s HIGH .
