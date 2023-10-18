@@ -6,4 +6,3 @@
 |`--static` | Static assets directory            | ./static      |
 |`--port`   | Port to bind to                    | 3000          |
 
-# dipsa-cicd
