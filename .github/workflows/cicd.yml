@@ -94,4 +94,4 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_TITLE: Image build and signed
         SLACK_COLOR: good
-        SLACK_MESSAGE: "Name: ${{ secrets.NAME}}\nMetriculation: ${{ secrets.MATRIC}}\nEmail: ${{ secrets.EMAIL }}\nGit: <${{ github.repositoryUrl }}>\nImage: <https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/cicd>"
+        SLACK_MESSAGE: "*Name:* ${{ secrets.NAME}}\nMetriculation: ${{ secrets.MATRIC}}\nEmail: ${{ secrets.EMAIL }}\nGit: <${{ github.repositoryUrl }}>\nImage: <https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/cicd>"
