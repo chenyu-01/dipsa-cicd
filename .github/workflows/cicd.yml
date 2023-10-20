@@ -47,7 +47,7 @@ jobs:
         file_path: trivy-results.txt
         initial_comment: "Scan report by ${{ secrets.NAME }}"
 
-    # if no failure, build and push docker image, also sign it then send the notification
+    # if no failure, build and push docker image
     -
       if:  ${{ steps.trivy.outcome == 'success' }}
       name: Login to Docker Hub
@@ -68,3 +68,8 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
+
+    # use cosign to digitally sign image 
+
+
+    # send success notification to slack

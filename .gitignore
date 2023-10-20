@@ -1,3 +1,4 @@
+cosign.key
 *.env
 *.secrets
 .github/workflows/*.yaml
