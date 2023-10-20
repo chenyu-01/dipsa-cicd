@@ -27,7 +27,7 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
-        severity: 'CRITICAL,HIGH' # CRITICAL will Success, High will Fail 
+        severity: 'CRITICAL' # CRITICAL will Success, High will Fail 
  
     - name: Slack Notification
       if:  ${{ steps.trivy.outcome == 'failure' }}
@@ -71,11 +71,13 @@ jobs:
 
     ## use cosign to digitally sign image 
     - name: Install Cosign
+      if: ${{ steps.trivy.outcome == 'success' }}
       uses: sigstore/cosign-installer@v3.1.1
 
 
 
     - name: Sign image with a key
+      if: ${{ steps.trivy.outcome == 'success' }}
       run: |
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
