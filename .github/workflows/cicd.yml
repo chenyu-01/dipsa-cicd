@@ -87,3 +87,11 @@ jobs:
         DIGEST: ${{ github.sha }}
 
     ## send success notification to slack
+    - name: send success notification to slack
+      if: ${{ steps.trivy.outcome == 'success' }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: Scan passed - ${{ github.actor }}
+        SLACK_COLOR: good
+        SLACK_MESSAGE: Scan passed, image pushed to docker hub and signed with cosign
