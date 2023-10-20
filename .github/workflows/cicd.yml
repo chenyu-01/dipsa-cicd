@@ -29,45 +29,45 @@ jobs:
     #     exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
     #     severity: 'CRITICAL,HIGH' # CRITICAL will Success, High will Fail 
  
-    - name: Slack Notification
-      if:  ${{ steps.trivy.outcome == 'failure' }}
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: Scan failed - ${{ github.actor }}
-        SLACK_COLOR: '#ff0000'
-        SLACK_MESSAGE: Failed trivy scan, see uploaded report
+    # - name: Slack Notification
+    #   if:  ${{ steps.trivy.outcome == 'failure' }}
+    #   uses: rtCamp/action-slack-notify@v2
+    #   env:
+    #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    #     SLACK_TITLE: Scan failed - ${{ github.actor }}
+    #     SLACK_COLOR: '#ff0000'
+    #     SLACK_MESSAGE: Failed trivy scan, see uploaded report
     
-    - name: Upload scan results to slack
-      if:  ${{ steps.trivy.outcome == 'failure' }}
-      uses: MeilCli/slack-upload-file@v3
-      with:
-        slack_token: ${{ secrets.SLACK_TOKEN }}
-        channel_id: ${{ secrets.SLACK_CHANNEL }}
-        file_path: trivy-results.txt
-        initial_comment: "Scan report by ${{ secrets.NAME }}"
+    # - name: Upload scan results to slack
+    #   if:  ${{ steps.trivy.outcome == 'failure' }}
+    #   uses: MeilCli/slack-upload-file@v3
+    #   with:
+    #     slack_token: ${{ secrets.SLACK_TOKEN }}
+    #     channel_id: ${{ secrets.SLACK_CHANNEL }}
+    #     file_path: trivy-results.txt
+    #     initial_comment: "Scan report by ${{ secrets.NAME }}"
 
     # if no failure, build and push docker image
-    -
-      if:  ${{ steps.trivy.outcome == 'success' }}
-      name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    -
-      if:  ${{ steps.trivy.outcome == 'success' }}
-      name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    -
-      name: Build and push
-      if: ${{ steps.trivy.outcome == 'success' }}
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
+    # -
+    #   if:  ${{ steps.trivy.outcome == 'success' }}
+    #   name: Login to Docker Hub
+    #   uses: docker/login-action@v3
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
+    # -
+    #   if:  ${{ steps.trivy.outcome == 'success' }}
+    #   name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v3
+    # -
+    #   name: Build and push
+    #   if: ${{ steps.trivy.outcome == 'success' }}
+    #   uses: docker/build-push-action@v5
+    #   with:
+    #     context: .
+    #     file: ./Dockerfile
+    #     push: true
+    #     tags: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
 
     # use cosign to digitally sign image 
     - name: Install Cosign
@@ -79,7 +79,7 @@ jobs:
       run: |
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
-        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
+        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         DIGEST: ${{ github.sha }}
