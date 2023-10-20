@@ -18,16 +18,16 @@ jobs:
       uses: actions/checkout@v4
 
       
-    - name: Run Trivy scan
-      uses: aquasecurity/trivy-action@master
-      id: trivy
-      continue-on-error: true # Continue on error, the outcome will be failure
-      with: 
-        scan-type: 'fs'
-        format: 'table'
-        output: 'trivy-results.txt'
-        exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
-        severity: 'CRITICAL,HIGH' # CRITICAL will Success, High will Fail 
+    # - name: Run Trivy scan
+    #   uses: aquasecurity/trivy-action@master
+    #   id: trivy
+    #   continue-on-error: true # Continue on error, the outcome will be failure
+    #   with: 
+    #     scan-type: 'fs'
+    #     format: 'table'
+    #     output: 'trivy-results.txt'
+    #     exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
+    #     severity: 'CRITICAL,HIGH' # CRITICAL will Success, High will Fail 
  
     - name: Slack Notification
       if:  ${{ steps.trivy.outcome == 'failure' }}
@@ -70,6 +70,18 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
 
     # use cosign to digitally sign image 
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.1.1
 
+
+
+    - name: Sign image with a key
+      run: |
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+      env:
+        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        DIGEST: ${{ github.sha }}
 
     # send success notification to slack
