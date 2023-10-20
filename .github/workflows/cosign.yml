@@ -22,14 +22,17 @@ jobs:
   
         - name: Install Cosign
           uses: sigstore/cosign-installer@v3.1.1
-
+        
+        - run: |
+            echo ${{ secrets.COSIGN_PRIVATE_KEY }} > cosign.key
+            echo cosign.key
 
         - name: Sign image with a key
           run: |
-            cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+            cosign sign --yes --key cosign.key "${TAGS}@${DIGEST}" 
           env:
             TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:test
             COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-            COSIGN_PASSWORD: ""
+            COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
             DIGEST: sha256:1b787ef046054a13dac3c1366f3e04cc8bde0fa7702607ba57592e39f623c472?uuid=25257F26-80B6-40D7-A986-2C4F0B54243D
   
