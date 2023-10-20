@@ -1,2 +1,3 @@
 *.env
 *.secrets
+.github/workflows/*.yaml
