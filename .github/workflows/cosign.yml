@@ -25,7 +25,7 @@ jobs:
         
         - run: |
             echo ${{ secrets.COSIGN_PRIVATE_KEY }} > cosign.key
-            echo cosign.key
+            cat cosign.key
 
         - name: Sign image with a key
           run: |
