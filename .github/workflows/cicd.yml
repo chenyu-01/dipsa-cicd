@@ -1,0 +1,47 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:    
+      - 'v[0-9].[0-9]' # matches v1.0, v2.3, etc.
+
+jobs:
+
+  scan:
+    # Only run this job if the commit message does not start with '#NORUN'
+    if:  ${{ !startsWith(github.event.head_commit.message, '#NORUN') }}
+    
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code in scan job
+      uses: actions/checkout@v4
+
+      
+    - name: Run Trivy scan
+      uses: aquasecurity/trivy-action@master
+      id: trivy
+      continue-on-error: true # Continue on error, the outcome will be failure
+      with: 
+        scan-type: 'fs'
+        format: 'table'
+        output: 'trivy-results.txt'
+        exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
+        severity: 'CRITICAL,HIGH' # CRITICAL will Success, High will Fail 
+ 
+    ## TODO: send notification to slack
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: Scan failed - ${{ github.actor }}
+        SLACK_COLOR: '#ff0000'
+        SLACK_MESSAGE: Failed trivy scan, see uploaded report
+    
+    - name: Upload scan results to slack
+      if:  ${{ steps.trivy.outcome == 'failure' }}
+      uses: MeilCli/slack-upload-file@v3
+      with:
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channel_id: ${{ secrets.SLACK_CHANNEL }}
+        file_path: trivy-results.txt
+        initial_comment: "Scan report by ${{ secrets.NAME }}"
