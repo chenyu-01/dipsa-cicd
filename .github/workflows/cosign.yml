@@ -2,7 +2,7 @@ name: cosign test
 
 on:
   push:
-    branches: [ test ]
+    branches: v1.0
 
 
 jobs:
