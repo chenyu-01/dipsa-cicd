@@ -76,18 +76,12 @@ jobs:
       uses: sigstore/cosign-installer@v3.1.1
 
 
-    - name: create cosign.key file
-      if: ${{ steps.trivy.outcome == 'success' }}
-      run: |
-        echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-        chmod 600 cosign.key
-      env:
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+
     - name: Sign image with a key
       if: ${{ steps.trivy.outcome == 'success' }}
       continue-on-error: true
       run: |
-        cosign sign --yes --key  cosign.key "${TAGS}@${DIGEST}"
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
         TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
