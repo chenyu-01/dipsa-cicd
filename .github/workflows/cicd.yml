@@ -45,3 +45,6 @@ jobs:
         channel_id: ${{ secrets.SLACK_CHANNEL }}
         file_path: trivy-results.txt
         initial_comment: "Scan report by ${{ secrets.NAME }}"
+
+    # build and push docker image, also sign it even if the scan failed then send the notification
+    
