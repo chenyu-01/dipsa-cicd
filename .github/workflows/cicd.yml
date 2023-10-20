@@ -78,6 +78,7 @@ jobs:
 
     - name: Sign image with a key
       if: ${{ steps.trivy.outcome == 'success' }}
+      continue-on-error: true
       run: |
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
