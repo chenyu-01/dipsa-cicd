@@ -2,7 +2,7 @@ name: cosign test
 
 on:
   push:
-    branches: v1.0
+    branches: v1.0 #trigger on push to v1.0 branch
 
 
 jobs:
