@@ -27,7 +27,7 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
-        severity: 'CRITICAL' # CRITICAL will Success, High will Fail 
+        severity: 'CRITICAL,HIGH' # CRITICAL will Success, HIGH will Fail 
  
     - name: Slack Notification
       if:  ${{ steps.trivy.outcome == 'failure' }}
