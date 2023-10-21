@@ -81,8 +81,7 @@ jobs:
       if: ${{ steps.trivy.outcome == 'success' }}
       continue-on-error: true
       run: |
-        cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
-        echo v1.0 branch workflow
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}"
       env:
         TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }} # abc/xyz:commit_sha
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
