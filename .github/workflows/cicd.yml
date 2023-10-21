@@ -73,7 +73,7 @@ jobs:
     ## use cosign to digitally sign image 
     - name: Install Cosign
       if: ${{ steps.trivy.outcome == 'success' }}
-      uses: sigstore/cosign-installer@v3.1.1
+      uses: sigstore/cosign-installer@main
 
 
 
