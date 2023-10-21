@@ -33,7 +33,7 @@ jobs:
       if:  ${{ steps.trivy.outcome == 'failure' }}
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_TEST }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_SUBMISSION }}
         SLACK_TITLE: Scan failed - ${{ secrets.NAME }}
         SLACK_COLOR: '#ff0000'
         SLACK_MESSAGE: Failed trivy scan, see uploaded report
@@ -43,7 +43,7 @@ jobs:
       uses: MeilCli/slack-upload-file@v3
       with:
         slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        channel_id: ${{ secrets.SLACK_CHANNEL_TEST }}
+        channel_id: ${{ secrets.SLACK_CHANNEL_SUBMISSION }}
         file_path: trivy-results.txt
         initial_comment: "Scan report by ${{ secrets.NAME }}"
 
@@ -93,7 +93,7 @@ jobs:
       if: ${{ steps.trivy.outcome == 'success' }}
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_TEST }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_SUBMISSION }}
         SLACK_TITLE: Image build and signed
         SLACK_COLOR: good
         SLACK_MESSAGE: "*Name:* ${{ secrets.NAME}}\n*Metriculation:* ${{ secrets.MATRIC}}\n*Email:* ${{ secrets.EMAIL }}\n*Git:* <${{ github.server_url }}/${{ github.repository}}>\n*Image:* <https://hub.docker.com/repository/docker/${{ secrets.DOCKER_USERNAME }}/cicd>"
