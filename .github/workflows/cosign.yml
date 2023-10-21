@@ -21,15 +21,12 @@ jobs:
             fetch-depth: 1
   
         - name: Install Cosign
-          uses: sigstore/cosign-installer@v3.1.1
-        
-        - run: |
-            echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
-            cat cosign.key
+          uses: sigstore/cosign-installer@main
+            
 
         - name: Sign image with a key
           run: |
-            cosign sign --yes --key cosign.key "${TAGS}@${DIGEST}" 
+            cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
           env:
             TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:test
             COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
