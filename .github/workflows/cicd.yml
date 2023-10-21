@@ -83,7 +83,7 @@ jobs:
       run: |
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
-        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }} # abc/xyz:commit_sha
+        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd # abc/xyz for image name
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         DIGEST: ${{ steps.docker_build.outputs.digest }} # sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
