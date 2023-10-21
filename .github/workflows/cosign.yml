@@ -22,13 +22,13 @@ jobs:
   
         - name: Install Cosign
           uses: sigstore/cosign-installer@main
-            
+          ## default release version is 2.2.0 a dev version or 2.1.0 version cosign generated key will cause it fail to sign
 
         - name: Sign image with a key
           run: |
             cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
           env:
-            TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:test
+            TAGS: chenyu01/cicd:test
             COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
             COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
             DIGEST: sha256:1b787ef046054a13dac3c1366f3e04cc8bde0fa7702607ba57592e39f623c472
