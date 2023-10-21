@@ -27,14 +27,14 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         exit-code: '1' # Will fail the *job* if there are any CRITICAL or HIGH vulnerabilities
-        severity: 'CRITICAL,HIGH' # CRITICAL will Success, HIGH will Fail 
+        severity: 'CRITICAL,HIGH' # Set CRITICAL to successfully pass scan, HIGH to fail scan 
  
     - name: Slack Notification
       if:  ${{ steps.trivy.outcome == 'failure' }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: Scan failed - ${{ github.actor }}
+        SLACK_TITLE: Scan failed - ${{ secrets.NAME }}
         SLACK_COLOR: '#ff0000'
         SLACK_MESSAGE: Failed trivy scan, see uploaded report
     
