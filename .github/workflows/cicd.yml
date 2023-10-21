@@ -83,10 +83,10 @@ jobs:
       run: |
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
-        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }}
+        TAGS: ${{ secrets.DOCKER_USERNAME }}/cicd:${{ github.sha }} # abc/xyz:commit_sha
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        DIGEST: ${{ steps.docker_build.outputs.digest }}
+        DIGEST: ${{ steps.docker_build.outputs.digest }} # sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
 
     ## send success notification to slack
     - name: send success notification to slack
